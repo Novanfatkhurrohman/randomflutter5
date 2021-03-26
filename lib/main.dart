@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
-import 'question.dart';
+//TODO: Step 2 - Import the rFlutter_Alert package here.
+import 'quiz_brain.dart';
+
+QuizBrain quizBrain = QuizBrain();
 
 void main() {
   runApp(MyApp());
@@ -26,23 +29,29 @@ class QuizPage extends StatefulWidget {
 }
 
 class _QuizPageState extends State<QuizPage> {
-  List<Icon> scoopKeeper = [
-    Icon(Icons.check, color: Colors.green),
-    Icon(Icons.close, color: Colors.red),
-    Icon(Icons.close, color: Colors.red),
-    Icon(Icons.close, color: Colors.red),
-    Icon(Icons.close, color: Colors.red),
-  ];
+  List<Icon> scoopKeeper = [];
+  void checkAnswer(bool userPickedAnswer) {
+    bool correctAnswer = quizBrain.getCorrectAnswer();
+    setState(() {
+      //TODO: Step 4 - Use IF/ELSE to check if we've reached the end of the quiz. If true, execute Part A, B, C, D.
+      //TODO: Step 4 Part A - show an alert using rFlutter_alert (remember to read the docs for the package!)
+      //HINT! Step 4 Part B is in the quiz_brain.dart
+      //TODO: Step 4 Part C - reset the questionNumber,
+      //TODO: Step 4 Part D - empty out the scoreKeeper.
 
-  List<Question> questionBank = [
-    Question(q: 'you can lead  a cow down stairs but  no up stairs.', a: false),
-    Question(
-        q: 'approximately one quarter of human bones are in the feet.',
-        a: true),
-    Question(q: 'A slug\'s blood is green.', a: true),
-  ];
+      //TODO: Step 5 - If we've not reached the end, ELSE do the answer checking steps below
+      if (userPickedAnswer == correctAnswer) {
+        scoopKeeper.add(Icon(
+          Icons.check,
+          color: Colors.green,
+        ));
+      } else {
+        scoopKeeper.add(Icon(Icons.close, color: Colors.red));
+      }
 
-  int questionsNumber = 0;
+      quizBrain.nextQuestion();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -56,7 +65,7 @@ class _QuizPageState extends State<QuizPage> {
             padding: EdgeInsets.all(10.0),
             child: Center(
               child: Text(
-                questionBank[questionsNumber].questionText,
+                quizBrain.getQuetionText(),
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 25.0,
@@ -80,15 +89,8 @@ class _QuizPageState extends State<QuizPage> {
               ),
             ),
             onPressed: () {
-              bool correctAnswer = questionBank[questionsNumber].questionAnswer;
-              if (correctAnswer == true) {
-                print('user got it  right');
-              } else {
-                print('user got it wrong');
-              }
-              setState(() {
-                questionsNumber++;
-              });
+              //quizBrain.questionBank[questionsNumber].questionAnswer = true;
+              checkAnswer(true);
             },
           ),
         )),
@@ -105,15 +107,7 @@ class _QuizPageState extends State<QuizPage> {
               ),
             ),
             onPressed: () {
-              bool correctAnswer = questionBank[questionsNumber].questionAnswer;
-              if (correctAnswer == false) {
-                print('user got it  right');
-              } else {
-                print('user got it wrong');
-              }
-              setState(() {
-                questionsNumber++;
-              });
+              checkAnswer(false);
             },
           ),
         )),
